@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Runtime.CompilerServices;
 
 public partial class Player : CharacterBody2D
 {
@@ -9,9 +10,21 @@ public partial class Player : CharacterBody2D
     bool jumpReleased;
     bool dashPressed;
 
+    float coyoteTime;
+
+    bool flutterUsed;
+    float flutterTime;
+
+    bool dashUsed;
+
+    AnimatedSprite2D sprite;
+
+
     public Vector2 velocity;
 
     public State CurrentState;
+
+
 
     [Export]
     float MaxSpeed;
@@ -26,10 +39,19 @@ public partial class Player : CharacterBody2D
     float JumpForce;
 
     [Export]
+    float CoyoteTimeMax = 0.1f;
+    
+    [Export]
     float Gravity;
 
     [Export]
     float DashForce;
+
+    [Export]
+    float FlutterAccel;
+
+    [Export]
+    float FlutterDurationMax;
 
     public enum State
     {
@@ -42,6 +64,8 @@ public partial class Player : CharacterBody2D
     public override void _Ready()
     {
         base._Ready();
+        sprite = GetNode<AnimatedSprite2D>("Sprite2D");
+        sprite.Play("idle");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -55,6 +79,8 @@ public partial class Player : CharacterBody2D
         GetInput();
 
         ProcessState(_delta);
+
+        UpdateTimers(_delta);
 
         Velocity = velocity;
 
@@ -128,20 +154,45 @@ public partial class Player : CharacterBody2D
         return hsp;
     }
 
-    private void HandleJump()
+    private void HandleJump(float delta)
     {
+
         if (jumpPressed)
         {
             if (CanJump())
             {
+                coyoteTime = 0f;
                 velocity.Y = JumpForce;
+            }
+            else
+            {
+                if (CanFlutter())
+                {
+                    flutterUsed = true;
+                    CurrentState = State.Flutter;
+                    velocity.Y = 0;
+                    flutterTime = FlutterDurationMax;
+                    sprite.Play("flutter");
+                }
             }
         }
     }
 
     private bool CanJump()
     {
-        return IsOnFloor();
+        if (IsOnFloor())
+        {
+            return true;
+        }
+        else
+        {
+            return (coyoteTime > 0);
+        }
+    }
+
+    private bool CanFlutter()
+    {
+        return !flutterUsed;
     }
 
     private void DoGravity(float delta)
@@ -158,16 +209,23 @@ public partial class Player : CharacterBody2D
         {
             if (CanDash())
             {
-                velocity.X = DashForce * inputDir;
+                var dashDir = Mathf.Ceil(inputDir);
+                if (dashDir == 0)
+                {
+                    dashDir = sprite.FlipH ? -1 : 1;
+                }
+                velocity.X = DashForce * dashDir;
                 velocity.Y = 0;
                 CurrentState = State.Dash;
+                dashUsed = true;
+                sprite.Play("dash");
             }
         }
     }
 
     private bool CanDash()
     {
-        return true;
+        return !dashUsed;
     }
 
 
@@ -180,20 +238,36 @@ public partial class Player : CharacterBody2D
                 {
                     MoveHorizontal(_delta);
 
-                    HandleJump();
+                    HandleJump(_delta);
 
                     HandleDash();
 
                     DoGravity(_delta);
+
+                    if (sprite.Animation == "idle" || sprite.Animation == "run") // not changed by dashing or fluttering
+                    {
+                        if (velocity.X == 0)
+                        {
+                            if (sprite.Animation != "idle") sprite.Play("idle");
+                        }
+                        else
+                        {
+                            if (sprite.Animation != "run") sprite.Play("run");
+                        }
+                    }
+
+                    FlipSpriteInput();
                 }
                 break;
             case State.Dash:
                 {
                     MoveHorizontal(_delta);
 
-                    HandleJump();
+                    HandleJump(_delta);
 
                     DoGravity(_delta);
+
+                    FlipSpriteVelocity();
 
                     if (Math.Abs(velocity.X) <= MaxSpeed)
                     {
@@ -201,8 +275,64 @@ public partial class Player : CharacterBody2D
                     }
                 }
                 break;
+            case State.Flutter:
+                {
+                    MoveHorizontal(_delta);
 
-            
+                    HandleDash();
+
+                    velocity.Y += FlutterAccel * _delta;
+
+                    flutterTime -= _delta;
+
+                    FlipSpriteInput();
+
+                    if (flutterTime < 0)
+                    {
+                        sprite.Play("run");
+                        CurrentState = State.Normal;
+                    }
+                }
+                break;
+        }
+    }
+
+    private void UpdateTimers(float delta)
+    {
+        if (IsOnFloor())
+        {
+            flutterUsed = false;
+            dashUsed = false;
+            coyoteTime = CoyoteTimeMax;
+        }
+        if (coyoteTime > 0) coyoteTime -= delta;
+
+
+    }
+
+    private void FlipSpriteVelocity()
+    {
+        if (velocity.X != 0)
+        {
+            sprite.FlipH = (velocity.X < 0);
+        }
+    }
+
+    private void FlipSpriteInput()
+    {
+        if (inputDir!= 0)
+        {
+            sprite.FlipH = (inputDir < 0);
+        }
+    }
+
+    private void OnAnimationEnd()
+    {
+        GD.Print("animation ended");
+        if (sprite.Animation == "dash")
+        {
+            GD.Print("dash ended");
+            sprite.Play("run");
         }
     }
 }
