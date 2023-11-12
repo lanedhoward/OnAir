@@ -16,8 +16,10 @@ WalkAccel = 1200.0
 Friction = 1000.0
 JumpForce = -300.0
 Gravity = 1001.0
+DashForce = 500.0
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(0, -32)
+position = Vector2(0, -88)
+zoom = Vector2(1.29, 1.29)
 position_smoothing_enabled = true
-position_smoothing_speed = 10.005
+position_smoothing_speed = 7.0

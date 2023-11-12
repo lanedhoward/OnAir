@@ -7,8 +7,11 @@ public partial class Player : CharacterBody2D
     bool jumpPressed;
     bool jumpHeld;
     bool jumpReleased;
+    bool dashPressed;
 
     public Vector2 velocity;
+
+    public State CurrentState;
 
     [Export]
     float MaxSpeed;
@@ -25,6 +28,17 @@ public partial class Player : CharacterBody2D
     [Export]
     float Gravity;
 
+    [Export]
+    float DashForce;
+
+    public enum State
+    {
+        Normal,
+        Flutter,
+        Dash,
+        Hit
+    }
+
     public override void _Ready()
     {
         base._Ready();
@@ -40,11 +54,7 @@ public partial class Player : CharacterBody2D
 
         GetInput();
 
-        MoveHorizontal(_delta);
-
-        HandleJump();
-
-        DoGravity(_delta);
+        ProcessState(_delta);
 
         Velocity = velocity;
 
@@ -58,6 +68,8 @@ public partial class Player : CharacterBody2D
         jumpPressed = Input.IsActionJustPressed("Jump");
         jumpHeld = Input.IsActionPressed("Jump");
         jumpReleased = Input.IsActionJustReleased("Jump");
+
+        dashPressed = Input.IsActionJustPressed("Dash");
     }
 
     public void MoveHorizontal(float delta)
@@ -122,7 +134,6 @@ public partial class Player : CharacterBody2D
         {
             if (CanJump())
             {
-                GD.Print("trying jumping");
                 velocity.Y = JumpForce;
             }
         }
@@ -135,22 +146,63 @@ public partial class Player : CharacterBody2D
 
     private void DoGravity(float delta)
     {
-        if (!IsOnFloor())
+        if (!IsOnFloor() && CurrentState != State.Dash)
         {
             velocity.Y += delta * Gravity;
         }
-        else
+    }
+
+    private void HandleDash()
+    {
+        if (dashPressed)
         {
-            //velocity.Y = 0;
+            if (CanDash())
+            {
+                velocity.X = DashForce * inputDir;
+                velocity.Y = 0;
+                CurrentState = State.Dash;
+            }
         }
-        /*
-        if (velocity.Y < 0)
+    }
+
+    private bool CanDash()
+    {
+        return true;
+    }
+
+
+    private void ProcessState(float _delta)
+    {
+        switch (CurrentState)
         {
+            default:
+            case State.Normal:
+                {
+                    MoveHorizontal(_delta);
+
+                    HandleJump();
+
+                    HandleDash();
+
+                    DoGravity(_delta);
+                }
+                break;
+            case State.Dash:
+                {
+                    MoveHorizontal(_delta);
+
+                    HandleJump();
+
+                    DoGravity(_delta);
+
+                    if (Math.Abs(velocity.X) <= MaxSpeed)
+                    {
+                        CurrentState = State.Normal;
+                    }
+                }
+                break;
+
+            
         }
-        else
-        {
-            velocity.Y = 0f;
-        }
-        */
     }
 }
