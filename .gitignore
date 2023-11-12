@@ -1,2 +1,4 @@
 # Godot 4+ specific ignores
 .godot/
+.vs/ON AIR/DesignTimeBuild/.dtbcache.v2
+.vs/ON AIR/v17/.suo
