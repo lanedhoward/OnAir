@@ -1,6 +1,8 @@
-[gd_resource type="TileSet" load_steps=6 format=3 uid="uid://c1kvtddqqt427"]
+[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://c1kvtddqqt427"]
 
 [ext_resource type="Texture2D" uid="uid://1s4arvk7w7n8" path="res://Environment/CLOUd tileset-Sheet.png" id="1_bmqfp"]
+[ext_resource type="PackedScene" path="res://Environment/Obstacle.tscn" id="2_kdftw"]
+[ext_resource type="PackedScene" path="res://Environment/DeathAir.tscn" id="3_etox1"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_to8uk"]
 tile_data = PackedInt32Array(0, 65536, 0, 65536, 262144, 0, 131072, 458752, 0, 1, 131072, 0, 65537, 327680, 0, 131073, 524288, 0, 2, 196608, 0, 65538, 393216, 0, 131074, 589824, 0)
@@ -82,9 +84,14 @@ texture = ExtResource("1_bmqfp")
 1:0/0/physics_layer_0/angular_velocity = 0.0
 1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_pw5tn"]
+scenes/1/scene = ExtResource("2_kdftw")
+scenes/2/scene = ExtResource("3_etox1")
+
 [resource]
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_yuujf")
+sources/2 = SubResource("TileSetScenesCollectionSource_pw5tn")
 pattern_0 = SubResource("TileMapPattern_to8uk")
 pattern_1 = SubResource("TileMapPattern_twbqq")
 pattern_2 = SubResource("TileMapPattern_f3483")

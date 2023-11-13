@@ -17,7 +17,15 @@ public partial class Player : CharacterBody2D
 
     bool dashUsed;
 
+    bool bounceNextFrame = false;
+
+    float deadTime = 0f;
+    float deadTimeMax = 2f;
+
     AnimatedSprite2D sprite;
+    PlayerAudio audio;
+    CollisionShape2D collider;
+    Camera2D camera;
 
 
     public Vector2 velocity;
@@ -58,7 +66,8 @@ public partial class Player : CharacterBody2D
         Normal,
         Flutter,
         Dash,
-        Hit
+        Hit,
+        Yippee
     }
 
     public override void _Ready()
@@ -66,6 +75,9 @@ public partial class Player : CharacterBody2D
         base._Ready();
         sprite = GetNode<AnimatedSprite2D>("Sprite2D");
         sprite.Play("idle");
+        audio = GetNode<PlayerAudio>("Audio");
+        collider = GetNode<CollisionShape2D>("CollisionShape2D");
+        camera = GetNode<Camera2D>("Camera2D");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -163,6 +175,7 @@ public partial class Player : CharacterBody2D
             {
                 coyoteTime = 0f;
                 velocity.Y = JumpForce;
+                audio.PlaySound(audio.jumpSound);
             }
             else
             {
@@ -173,6 +186,7 @@ public partial class Player : CharacterBody2D
                     velocity.Y = 0;
                     flutterTime = FlutterDurationMax;
                     sprite.Play("flutter");
+                    audio.PlaySound(audio.flutterSound);
                 }
             }
         }
@@ -219,6 +233,7 @@ public partial class Player : CharacterBody2D
                 CurrentState = State.Dash;
                 dashUsed = true;
                 sprite.Play("dash");
+                audio.PlaySound(audio.dashSound);
             }
         }
     }
@@ -294,6 +309,39 @@ public partial class Player : CharacterBody2D
                     }
                 }
                 break;
+            case State.Yippee:
+                {
+                    inputDir = 0;
+
+                    MoveHorizontal(_delta);
+
+                    DoGravity(_delta);
+
+                }
+                break;
+            case State.Hit:
+                {
+                    if (bounceNextFrame)
+                    {
+                        velocity.X = 0;
+                        velocity.Y = JumpForce;
+                        bounceNextFrame = false;
+                    }
+
+                    inputDir = 0;
+
+                    MoveHorizontal(_delta);
+
+                    DoGravity(_delta);
+
+                    deadTime += _delta;
+                    if (deadTime >= deadTimeMax)
+                    {
+                        GetTree().ReloadCurrentScene();
+                    }
+
+                }
+                break;
         }
     }
 
@@ -307,7 +355,7 @@ public partial class Player : CharacterBody2D
         }
         if (coyoteTime > 0) coyoteTime -= delta;
 
-
+        
     }
 
     private void FlipSpriteVelocity()
@@ -334,5 +382,26 @@ public partial class Player : CharacterBody2D
             GD.Print("dash ended");
             sprite.Play("run");
         }
+    }
+
+    public void StartYippee()
+    {
+        sprite.Play("yippee");
+        CurrentState = State.Yippee;
+    }
+
+    public void GetHit(bool bounce)
+    {
+        collider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+        CurrentState = State.Hit;
+        sprite.Play("hit");
+        audio.PlaySound(audio.hitSound);
+
+        if (bounce)
+        {
+            bounceNextFrame = true;
+        }
+        camera.PositionSmoothingEnabled = false;
+        camera.Reparent(GetTree().CurrentScene);
     }
 }

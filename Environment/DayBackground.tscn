@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0q8wgiwcnxmw"]
+
+[ext_resource type="Texture2D" uid="uid://beflf8d5yo1iq" path="res://Environment/Day background.png" id="1_pn18s"]
+
+[node name="DayBackground" type="Sprite2D"]
+z_index = -55
+texture_repeat = 2
+position = Vector2(1964, -175)
+scale = Vector2(2, 2)
+texture = ExtResource("1_pn18s")
+region_enabled = true
+region_rect = Rect2(0, 0, 60000, 360)
