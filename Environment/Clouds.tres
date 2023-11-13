@@ -1,8 +1,8 @@
 [gd_resource type="TileSet" load_steps=9 format=3 uid="uid://c1kvtddqqt427"]
 
 [ext_resource type="Texture2D" uid="uid://1s4arvk7w7n8" path="res://Environment/CLOUd tileset-Sheet.png" id="1_bmqfp"]
-[ext_resource type="PackedScene" uid="uid://bcoaq2tyolonq" path="res://Environment/Obstacle.tscn" id="2_kdftw"]
-[ext_resource type="PackedScene" uid="uid://f6gip3nvr4ji" path="res://Environment/DeathAir.tscn" id="3_etox1"]
+[ext_resource type="PackedScene" path="res://Environment/Obstacle.tscn" id="2_kdftw"]
+[ext_resource type="PackedScene" path="res://Environment/DeathAir.tscn" id="3_etox1"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_to8uk"]
 tile_data = PackedInt32Array(0, 65536, 0, 65536, 262144, 0, 131072, 458752, 0, 1, 131072, 0, 65537, 327680, 0, 131073, 524288, 0, 2, 196608, 0, 65538, 393216, 0, 131074, 589824, 0)
