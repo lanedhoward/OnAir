@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://u6oaipx2q8e3"]
+
+[ext_resource type="Script" path="res://System/MainMenu.cs" id="1_gcsml"]
+[ext_resource type="Texture2D" uid="uid://b4ng1k4ho0v2q" path="res://sprites/it’s love and heaven comic.png" id="2_curs4"]
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 768.0
+offset_bottom = 432.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gcsml")
+ScenePath = "res://Environment/World.tscn"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 1)
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1233.0
+offset_top = 368.0
+offset_right = 1633.0
+offset_bottom = 768.0
+text = "RESCUE HER <3333333"
+
+[node name="It’sLoveAndHeavenComic" type="Sprite2D" parent="."]
+position = Vector2(616, 539)
+scale = Vector2(0.425, 0.425)
+texture = ExtResource("2_curs4")
+
+[connection signal="pressed" from="StartButton" to="." method="StartGame"]

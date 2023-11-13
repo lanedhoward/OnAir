@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bwmtqh4xj7wtc"]
+[gd_scene load_steps=3 format=3 uid="uid://q4hxaxcelafl"]
 
-[ext_resource type="Script" path="res://System/MainMenu.cs" id="1_gwxcg"]
-[ext_resource type="Texture2D" uid="uid://cfhikmrfd6pvp" path="res://sprites/TITLE SCREEN.png" id="2_fctmo"]
+[ext_resource type="Script" path="res://System/MainMenu.cs" id="1_ntvu0"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ljomx"]
+font_size = 116
 
 [node name="TitleScreen" type="Control"]
 layout_mode = 3
@@ -12,8 +14,8 @@ offset_right = 768.0
 offset_bottom = 432.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_gwxcg")
-ScenePath = "res://System/ComicScreen.tscn"
+script = ExtResource("1_ntvu0")
+ScenePath = "res://System/TitleScreen.tscn"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 0
@@ -21,18 +23,13 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 color = Color(0.54902, 0.74902, 0.745098, 1)
 
-[node name="TitleScreen" type="Sprite2D" parent="."]
-position = Vector2(960, 440.92)
-scale = Vector2(7, 7)
-texture = ExtResource("2_fctmo")
-
 [node name="StartButton" type="Button" parent="."]
 layout_mode = 0
 offset_left = 760.0
 offset_top = 793.0
 offset_right = 1160.0
 offset_bottom = 893.0
-text = "START GAME <3333"
+text = "RESTART GAME <3333"
 
 [node name="ExitButton" type="Button" parent="."]
 layout_mode = 0
@@ -41,6 +38,17 @@ offset_top = 910.595
 offset_right = 1160.0
 offset_bottom = 1010.59
 text = "EXIT GAME >:("
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 395.0
+offset_top = 207.0
+offset_right = 1547.0
+offset_bottom = 529.0
+text = "YOU WIN!!!!!!!!!!!!!!!!!!!!
+<<<<<<3333333333"
+label_settings = SubResource("LabelSettings_ljomx")
+horizontal_alignment = 1
 
 [connection signal="pressed" from="StartButton" to="." method="StartGame"]
 [connection signal="pressed" from="ExitButton" to="." method="ExitGame"]
