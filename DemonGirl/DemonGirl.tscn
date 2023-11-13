@@ -1,0 +1,106 @@
+[gd_scene load_steps=15 format=3 uid="uid://bxlpw81fvval4"]
+
+[ext_resource type="Texture2D" uid="uid://brr2pc7cedyca" path="res://sprites/Demon/demon character-Sheet.png" id="1_kaktn"]
+[ext_resource type="Script" path="res://DemonGirl/DemonGirl.cs" id="1_macmi"]
+[ext_resource type="Texture2D" uid="uid://bgudayyr2cf2f" path="res://sprites/Demon/demon yippee-Sheet.png" id="2_tvpgx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8bcbb"]
+atlas = ExtResource("1_kaktn")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_scsom"]
+atlas = ExtResource("1_kaktn")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_20ch6"]
+atlas = ExtResource("1_kaktn")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xptuq"]
+atlas = ExtResource("1_kaktn")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jvs8l"]
+atlas = ExtResource("2_tvpgx")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ppe4g"]
+atlas = ExtResource("2_tvpgx")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jcf7b"]
+atlas = ExtResource("2_tvpgx")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vna2o"]
+atlas = ExtResource("2_tvpgx")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_027n3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8bcbb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_scsom")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_20ch6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xptuq")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jvs8l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ppe4g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jcf7b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vna2o")
+}],
+"loop": true,
+"name": &"yippee",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q0j2a"]
+size = Vector2(50, 45)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rbscn"]
+size = Vector2(20, 25)
+
+[node name="DemonGirl" type="Area2D"]
+script = ExtResource("1_macmi")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -16)
+sprite_frames = SubResource("SpriteFrames_027n3")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -23)
+shape = SubResource("RectangleShape2D_q0j2a")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(0, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 2.5)
+shape = SubResource("RectangleShape2D_rbscn")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
+[connection signal="timeout" from="Timer" to="." method="ChangeScene"]

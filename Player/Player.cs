@@ -18,6 +18,7 @@ public partial class Player : CharacterBody2D
     bool dashUsed;
 
     AnimatedSprite2D sprite;
+    PlayerAudio audio;
 
 
     public Vector2 velocity;
@@ -58,7 +59,8 @@ public partial class Player : CharacterBody2D
         Normal,
         Flutter,
         Dash,
-        Hit
+        Hit,
+        Yippee
     }
 
     public override void _Ready()
@@ -66,6 +68,7 @@ public partial class Player : CharacterBody2D
         base._Ready();
         sprite = GetNode<AnimatedSprite2D>("Sprite2D");
         sprite.Play("idle");
+        audio = GetNode<PlayerAudio>("Audio");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -163,6 +166,7 @@ public partial class Player : CharacterBody2D
             {
                 coyoteTime = 0f;
                 velocity.Y = JumpForce;
+                audio.PlaySound(audio.jumpSound);
             }
             else
             {
@@ -173,6 +177,7 @@ public partial class Player : CharacterBody2D
                     velocity.Y = 0;
                     flutterTime = FlutterDurationMax;
                     sprite.Play("flutter");
+                    audio.PlaySound(audio.flutterSound);
                 }
             }
         }
@@ -219,6 +224,7 @@ public partial class Player : CharacterBody2D
                 CurrentState = State.Dash;
                 dashUsed = true;
                 sprite.Play("dash");
+                audio.PlaySound(audio.dashSound);
             }
         }
     }
@@ -294,6 +300,16 @@ public partial class Player : CharacterBody2D
                     }
                 }
                 break;
+            case State.Yippee:
+                {
+                    inputDir = 0;
+
+                    MoveHorizontal(_delta);
+
+                    DoGravity(_delta);
+
+                }
+                break;
         }
     }
 
@@ -307,7 +323,7 @@ public partial class Player : CharacterBody2D
         }
         if (coyoteTime > 0) coyoteTime -= delta;
 
-
+        
     }
 
     private void FlipSpriteVelocity()
@@ -334,5 +350,11 @@ public partial class Player : CharacterBody2D
             GD.Print("dash ended");
             sprite.Play("run");
         }
+    }
+
+    public void StartYippee()
+    {
+        sprite.Play("yippee");
+        CurrentState = State.Yippee;
     }
 }
