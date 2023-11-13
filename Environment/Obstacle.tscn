@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bcoaq2tyolonq"]
+
+[ext_resource type="Script" path="res://Obstacle.cs" id="1_fogvl"]
+[ext_resource type="Texture2D" uid="uid://bygq13306mj85" path="res://sprites/Obstacles/spikes.png" id="2_w8vqb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_skmb3"]
+size = Vector2(16, 15)
+
+[node name="Obstacle" type="Area2D"]
+script = ExtResource("1_fogvl")
+
+[node name="Spikes" type="Sprite2D" parent="."]
+texture = ExtResource("2_w8vqb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_skmb3")
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]

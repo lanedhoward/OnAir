@@ -17,8 +17,14 @@ public partial class Player : CharacterBody2D
 
     bool dashUsed;
 
+    bool justGotHit = false;
+
+    float deadTime = 0f;
+    float deadTimeMax = 2f;
+
     AnimatedSprite2D sprite;
     PlayerAudio audio;
+    CollisionShape2D collider;
 
 
     public Vector2 velocity;
@@ -69,6 +75,7 @@ public partial class Player : CharacterBody2D
         sprite = GetNode<AnimatedSprite2D>("Sprite2D");
         sprite.Play("idle");
         audio = GetNode<PlayerAudio>("Audio");
+        collider = GetNode<CollisionShape2D>("CollisionShape2D");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -310,6 +317,29 @@ public partial class Player : CharacterBody2D
 
                 }
                 break;
+            case State.Hit:
+                {
+                    if (justGotHit)
+                    {
+                        velocity.X = 0;
+                        velocity.Y = JumpForce;
+                        justGotHit = false;
+                    }
+
+                    inputDir = 0;
+
+                    MoveHorizontal(_delta);
+
+                    DoGravity(_delta);
+
+                    deadTime += _delta;
+                    if (deadTime >= deadTimeMax)
+                    {
+                        GetTree().ReloadCurrentScene();
+                    }
+
+                }
+                break;
         }
     }
 
@@ -356,5 +386,14 @@ public partial class Player : CharacterBody2D
     {
         sprite.Play("yippee");
         CurrentState = State.Yippee;
+    }
+
+    public void GetHit()
+    {
+        collider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+        CurrentState = State.Hit;
+        sprite.Play("hit");
+        audio.PlaySound(audio.hitSound);
+        justGotHit = true;
     }
 }
