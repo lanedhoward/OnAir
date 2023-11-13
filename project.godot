@@ -10,10 +10,10 @@ config_version=5
 
 [application]
 
-config/name="On Air"
+config/name="LoveAndHeaven"
 run/main_scene="res://System/TitleScreen.tscn"
 config/features=PackedStringArray("4.1", "C#", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://sprites/icon.png"
 
 [display]
 
