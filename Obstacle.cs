@@ -3,6 +3,8 @@ using System;
 
 public partial class Obstacle : Area2D
 {
+    [Export]
+    bool bouncePlayer = true;
 
     public void OnBodyEntered(Node2D body)
     {
@@ -10,7 +12,7 @@ public partial class Obstacle : Area2D
         {
             if (p.CurrentState != Player.State.Hit)
             {
-                p.GetHit();
+                p.GetHit(bouncePlayer);
             }
         }
     }

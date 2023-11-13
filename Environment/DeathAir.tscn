@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bcoaq2tyolonq" path="res://Environment/Obstacle.tscn" id="1_m8h08"]
 
 [node name="Obstacle" instance=ExtResource("1_m8h08")]
+bouncePlayer = false
 
 [node name="Spikes" parent="." index="0"]
 visible = false
