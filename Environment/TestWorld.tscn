@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://k85tif74ap6s"]
+[gd_scene load_steps=5 format=3 uid="uid://k85tif74ap6s"]
 
 [ext_resource type="PackedScene" uid="uid://cshxpind2rkj2" path="res://Player/Player.tscn" id="1_63763"]
 [ext_resource type="TileSet" uid="uid://c1kvtddqqt427" path="res://Environment/Clouds.tres" id="2_qqamq"]
 [ext_resource type="PackedScene" uid="uid://bxlpw81fvval4" path="res://DemonGirl/DemonGirl.tscn" id="2_uvium"]
+[ext_resource type="Texture2D" uid="uid://beflf8d5yo1iq" path="res://Environment/Day background.png" id="4_ol6jw"]
 
 [node name="World" type="Node2D"]
 
@@ -17,3 +18,12 @@ layer_0/tile_data = PackedInt32Array(65533, 65536, 0, 131069, 262144, 0, 196605,
 [node name="DemonGirl" parent="." instance=ExtResource("2_uvium")]
 position = Vector2(111, 0)
 ScenePath = "res://Environment/World.tscn"
+
+[node name="DayBackground" type="Sprite2D" parent="."]
+z_index = -55
+texture_repeat = 2
+position = Vector2(1964, -175)
+scale = Vector2(2, 2)
+texture = ExtResource("4_ol6jw")
+region_enabled = true
+region_rect = Rect2(0, 0, 60000, 360)
